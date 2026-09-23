@@ -101,8 +101,13 @@ setup_headscale() {
 	for u in hpc-lab dosen tamu; do
 		UID_TMP=$(su-exec "$PUID:$PGID" ${APP} users list 2>/dev/null | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' | awk -v name="$u" '$0 ~ name {print $1; exit}') || true
 		if [ -n "$UID_TMP" ]; then
-			echo "INFO: [setup] Generating pre-auth key for $u (id ${UID_TMP})..."
-			su-exec "$PUID:$PGID" ${APP} preauthkeys create --user "${UID_TMP}" --reusable --expiration 720h || true
+			EXISTING_KEY=$(su-exec "$PUID:$PGID" ${APP} preauthkeys list --user "${UID_TMP}" 2>/dev/null | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' | awk '$3=="true" && $4=="true" {print $1; exit}') || true
+			if [ -z "$EXISTING_KEY" ]; then
+				echo "INFO: [setup] Generating pre-auth key for $u (id ${UID_TMP})..."
+				su-exec "$PUID:$PGID" ${APP} preauthkeys create --user "${UID_TMP}" --reusable --expiration 720h || true
+			else
+				echo "INFO: [setup] Reusable pre-auth key already exists for $u, skipping."
+			fi
 		else
 			echo "WARN: [setup] Could not determine user id for $u"
 		fi
