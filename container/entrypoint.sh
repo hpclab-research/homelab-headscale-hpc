@@ -95,10 +95,10 @@ setup_headscale() {
 
 	echo "INFO: [setup] Ensuring users exist..."
 	su-exec "$PUID:$PGID" ${APP} users create hpc-lab 2>/dev/null || true
-	su-exec "$PUID:$PGID" ${APP} users create arif 2>/dev/null || true
-	su-exec "$PUID:$PGID" ${APP} users create hanif 2>/dev/null || true
+	su-exec "$PUID:$PGID" ${APP} users create dosen 2>/dev/null || true
+	su-exec "$PUID:$PGID" ${APP} users create tamu 2>/dev/null || true
 
-	for u in hpc-lab arif hanif; do
+	for u in hpc-lab dosen tamu; do
 		UID_TMP=$(su-exec "$PUID:$PGID" ${APP} users list 2>/dev/null | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' | awk -v name="$u" '$0 ~ name {print $1; exit}') || true
 		if [ -n "$UID_TMP" ]; then
 			echo "INFO: [setup] Generating pre-auth key for $u (id ${UID_TMP})..."

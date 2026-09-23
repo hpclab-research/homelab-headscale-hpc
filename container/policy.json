@@ -1,18 +1,14 @@
 {
   "groups": {
+    "group:dosen": ["dosen@"],
     "group:lab": ["hpc-lab@"],
-    "group:external": ["arif@", "hanif@"]
+    "group:tamu": ["tamu@"]
   },
   "acls": [
     {
       "action": "accept",
-      "src": ["group:lab"],
+      "src": ["group:dosen", "group:lab", "group:tamu"],
       "dst": ["*:*"]
-    },
-    {
-      "action": "accept",
-      "src": ["group:external"],
-      "dst": ["192.168.50.8:5432"]
     }
   ]
 }
